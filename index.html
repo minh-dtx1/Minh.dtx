@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Minh · Thiết kế cầu và BIM</title>
+<meta name="description" content="Trang cá nhân của Minh: thiết kế cầu, bản vẽ 2D và mô hình BIM.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --concrete: #E3E5E4;
+    --surface: #F2F3F2;
+    --ink: #1C2830;
+    --muted: #55646D;
+    --line: #B9C0C2;
+    --signal: #E8A800;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --concrete: #161C20;
+      --surface: #1E262B;
+      --ink: #E6EAEB;
+      --muted: #9AA7AE;
+      --line: #36434A;
+      --signal: #F2B705;
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --concrete: #161C20;
+    --surface: #1E262B;
+    --ink: #E6EAEB;
+    --muted: #9AA7AE;
+    --line: #36434A;
+    --signal: #F2B705;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0;
+    background: var(--concrete);
+    color: var(--ink);
+    font-family: "Be Vietnam Pro", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 17px;
+    line-height: 1.6;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  a { color: inherit; }
+  a:focus-visible, button:focus-visible { outline: 3px solid var(--signal); outline-offset: 3px; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: calc(18px + env(safe-area-inset-top, 0px)) 0 18px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; font-weight: 700; }
+  .mono {
+    width: 40px; height: 40px; display: grid; place-items: center;
+    background: var(--ink); color: var(--concrete);
+    font-weight: 800; font-size: 22px; border-radius: 4px;
+  }
+  nav a { margin-left: 22px; text-decoration: none; color: var(--muted); font-weight: 500; }
+  nav a:hover { color: var(--ink); }
+
+  .hero h1 {
+    font-size: clamp(34px, 6.4vw, 72px);
+    line-height: 1.04; letter-spacing: -0.025em; font-weight: 800;
+    margin: 28px 0 16px; max-width: 14ch;
+  }
+  .hero p.lead { color: var(--muted); max-width: 52ch; margin: 0 0 28px; font-size: 19px; }
+
+  .viewer {
+    position: relative; height: clamp(300px, 52vw, 520px);
+    border-top: 2px solid var(--ink); border-bottom: 1px solid var(--line);
+    touch-action: pan-y; cursor: grab;
+  }
+  .viewer:active { cursor: grabbing; }
+  .viewer canvas { display: block; width: 100%; height: 100%; }
+  .viewer-bar {
+    display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between;
+    padding: 12px 0 0; color: var(--muted); font-size: 15px;
+  }
+  .btn {
+    font: inherit; font-weight: 700; font-size: 15px;
+    padding: 10px 16px; border: 2px solid var(--ink); border-radius: 4px;
+    background: transparent; color: var(--ink); cursor: pointer;
+  }
+  .btn[aria-pressed="true"] { background: var(--signal); border-color: var(--signal); color: #1C2830; }
+
+  section { padding: 72px 0 0; }
+  h2 { font-size: 28px; letter-spacing: -0.01em; margin: 0 0 20px; }
+
+  .projects { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+  .projects li {
+    display: grid; grid-template-columns: 1fr auto; gap: 4px 24px;
+    padding: 20px 0; border-bottom: 1px solid var(--line);
+  }
+  .projects h3 { margin: 0; font-size: 20px; }
+  .projects .year { font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .projects p { grid-column: 1 / -1; margin: 0; color: var(--muted); max-width: 64ch; }
+
+  .tools p { max-width: 62ch; color: var(--muted); margin: 0; }
+
+  /* Khung tên bản vẽ */
+  .titleblock {
+    margin: 80px 0 40px; border: 2px solid var(--ink);
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    background: var(--surface);
+  }
+  .titleblock div { padding: 12px 14px; border-left: 1px solid var(--line); }
+  .titleblock div:first-child { border-left: 0; }
+  .titleblock small { display: block; color: var(--muted); font-size: 13px; }
+  .titleblock strong { font-size: 16px; overflow-wrap: anywhere; }
+  @media (max-width: 640px) {
+    nav a { margin-left: 14px; }
+    .titleblock { grid-template-columns: 1fr 1fr; }
+    .titleblock div:nth-child(3) { border-left: 0; }
+    .titleblock div:nth-child(n+3) { border-top: 1px solid var(--line); }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <a class="brand" href="./" aria-label="Trang chủ">
+      <span class="mono" aria-hidden="true">M</span><span>Minh</span>
+    </a>
+    <nav><a href="#du-an">Dự án</a><a href="#lien-he">Liên hệ</a></nav>
+  </header>
+
+  <main>
+    <div class="hero">
+      <h1>Thiết kế cầu, từ bản vẽ 2D đến mô hình BIM.</h1>
+      <p class="lead">Tôi là Minh, kỹ sư thiết kế cầu đường. Tôi triển khai bản vẽ chi tiết và dựng mô hình BIM cho các công trình hạ tầng.</p>
+
+      <div class="viewer" id="viewer" aria-label="Mô hình 3D cầu ba nhịp dầm super-T, kéo để xoay"></div>
+      <div class="viewer-bar">
+        <span>Cầu 3 nhịp 38 m, dầm super-T. Kéo để xoay.</span>
+        <button class="btn" id="toggleDeck" aria-pressed="false">Ẩn bản mặt cầu</button>
+      </div>
+    </div>
+
+    <section id="du-an">
+      <h2>Dự án</h2>
+      <ul class="projects">
+        <li>
+          <h3>Cầu dầm super-T, mô hình LOD400</h3><span class="year">2026</span>
+          <p>Dựng mô hình Revit chi tiết tới cốt thép và chi tiết liên kết, xuất bản vẽ thi công từ mô hình.</p>
+        </li>
+        <li>
+          <h3>Nút giao khác mức</h3><span class="year">2025</span>
+          <p>Thiết kế tuyến và mặt bằng trên Civil 3D, phối hợp với nhóm kết cấu cầu.</p>
+        </li>
+        <li>
+          <h3>Cầu bản rỗng vượt kênh</h3><span class="year">2024</span>
+          <p>Triển khai bản vẽ 2D chi tiết: bố trí chung, mố trụ, cốt thép bản mặt cầu.</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="tools">
+      <h2>Công cụ</h2>
+      <p>AutoCAD cho bản vẽ 2D, Civil 3D cho tuyến và địa hình, Revit cho mô hình BIM. Đang thử dùng AI để tự động hoá việc dựng mô hình từ bản vẽ.</p>
+    </section>
+  </main>
+
+  <footer class="titleblock" id="lien-he">
+    <div><small>Người thiết kế</small><strong>Minh</strong></div>
+    <div><small>Email</small><strong><a href="mailto:ban@example.com">ban@example.com</a></strong></div>
+    <div><small>Cập nhật</small><strong>11/2026</strong></div>
+    <div><small>Tờ số</small><strong>01 / 01</strong></div>
+  </footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function () {
+  const box = document.getElementById('viewer');
+  if (!window.THREE) { box.textContent = 'Không tải được mô hình 3D. Kiểm tra kết nối mạng rồi tải lại trang.'; return; }
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(32, 1, 0.5, 1000);
+  camera.position.set(0, 26, 125);
+  camera.lookAt(0, -3, 0);
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  box.appendChild(renderer.domElement);
+
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x8a8f8c, 0.75));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.75);
+  sun.position.set(40, 60, 50);
+  scene.add(sun);
+
+  const concrete = new THREE.MeshStandardMaterial({ color: 0xb8bab6, roughness: 0.9 });
+  const girderMat = new THREE.MeshStandardMaterial({ color: 0xc9c6bd, roughness: 0.85 });
+  const accent = new THREE.MeshStandardMaterial({ color: 0xe8a800, roughness: 0.6 });
+  const deckMat = new THREE.MeshStandardMaterial({ color: 0x9da2a3, roughness: 0.95, transparent: true, opacity: 1 });
+
+  const bridge = new THREE.Group();
+  scene.add(bridge);
+
+  // Mặt cắt dầm super-T (đơn giản hoá), đơn vị m
+  const s = new THREE.Shape();
+  s.moveTo(-0.45, 0); s.lineTo(0.45, 0);
+  s.lineTo(0.8, 1.55); s.lineTo(1.2, 1.6); s.lineTo(1.2, 1.75);
+  s.lineTo(-1.2, 1.75); s.lineTo(-1.2, 1.6); s.lineTo(-0.8, 1.55);
+  s.closePath();
+
+  const SPANS = 3, L = 38, GIRDERS = 6, SPACING = 2.45;
+  const total = SPANS * L;
+  const girderGeo = new THREE.ExtrudeGeometry(s, { depth: L - 0.4, bevelEnabled: false });
+  girderGeo.rotateY(Math.PI / 2);
+
+  for (let i = 0; i < SPANS; i++) {
+    const x0 = -total / 2 + i * L + 0.2;
+    for (let g = 0; g < GIRDERS; g++) {
+      const z = (g - (GIRDERS - 1) / 2) * SPACING;
+      const m = new THREE.Mesh(girderGeo, (i === 1 && g === 2) ? accent : girderMat);
+      m.position.set(x0, 0, z);
+      bridge.add(m);
+    }
+  }
+
+  const deckW = GIRDERS * SPACING + 0.6;
+  const deck = new THREE.Mesh(new THREE.BoxGeometry(total, 0.22, deckW), deckMat);
+  deck.position.set(0, 1.86, 0);
+  bridge.add(deck);
+  [-1, 1].forEach(side => {
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(total, 0.9, 0.35), deckMat);
+    rail.position.set(0, 2.42, side * (deckW / 2 - 0.18));
+    bridge.add(rail);
+  });
+
+  // Trụ: xà mũ + 3 cột tròn
+  for (let i = 1; i < SPANS; i++) {
+    const x = -total / 2 + i * L;
+    const cap = new THREE.Mesh(new THREE.BoxGeometry(1.8, 1.4, deckW), concrete);
+    cap.position.set(x, -0.7, 0);
+    bridge.add(cap);
+    [-5, 0, 5].forEach(z => {
+      const col = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 9, 24), concrete);
+      col.position.set(x, -5.9, z);
+      bridge.add(col);
+    });
+  }
+  // Mố hai đầu
+  [-1, 1].forEach(side => {
+    const ab = new THREE.Mesh(new THREE.BoxGeometry(3, 4, deckW + 1), concrete);
+    ab.position.set(side * (total / 2 + 1.3), -1.5, 0);
+    bridge.add(ab);
+  });
+
+  const grid = new THREE.GridHelper(160, 32, 0x7f8a90, 0x9aa3a8);
+  grid.position.y = -10.4;
+  grid.material.transparent = true; grid.material.opacity = 0.35;
+  scene.add(grid);
+
+  // Xoay bằng kéo
+  let rotY = -0.55, rotX = 0, dragging = false, lastX = 0, lastY = 0, idle = 0;
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  box.addEventListener('pointerdown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; box.setPointerCapture(e.pointerId); });
+  box.addEventListener('pointermove', e => {
+    if (!dragging) return;
+    rotY += (e.clientX - lastX) * 0.008;
+    rotX = Math.max(-0.35, Math.min(0.5, rotX + (e.clientY - lastY) * 0.004));
+    lastX = e.clientX; lastY = e.clientY; idle = 0;
+  });
+  ['pointerup', 'pointercancel'].forEach(t => box.addEventListener(t, () => { dragging = false; }));
+
+  // Ẩn/hiện bản mặt cầu
+  const btn = document.getElementById('toggleDeck');
+  let hidden = false;
+  btn.addEventListener('click', () => {
+    hidden = !hidden;
+    btn.setAttribute('aria-pressed', hidden);
+    btn.textContent = hidden ? 'Hiện bản mặt cầu' : 'Ẩn bản mặt cầu';
+  });
+
+  function resize() {
+    const w = box.clientWidth, h = box.clientHeight;
+    renderer.setSize(w, h, false);
+    camera.aspect = w / h;
+    camera.position.z = w < 600 ? 175 : 125;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+  resize();
+
+  function frame() {
+    idle++;
+    if (!dragging && !reduce && idle > 120) rotY += 0.0018;
+    bridge.rotation.y = rotY;
+    bridge.rotation.x = rotX;
+    const target = hidden ? 0.08 : 1;
+    deckMat.opacity += (target - deckMat.opacity) * 0.12;
+    deckMat.depthWrite = deckMat.opacity > 0.95;
+    renderer.render(scene, camera);
+    requestAnimationFrame(frame);
+  }
+  frame();
+})();
+</script>
+</body>
+</html>
